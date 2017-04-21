@@ -1,0 +1,28 @@
+BASES = ['A','C','G','T']
+
+class InvalidStrand(Exception):
+    pass
+
+
+def _check_bases(strand_str):
+    """ Validate the input string is a valid strand """
+    if isinstance(strand_str, str) == False:
+        raise InvalidStrand('Wrong type, must be a str')
+
+    for base in strand_str:
+        if base.upper() not in BASES:
+            raise InvalidStrand('Strand contains an invalid base unit') 
+
+    return strand_str
+
+
+class Strand(object):
+
+    def __init__(self, strand_str):
+        self.strand = _check_bases(strand_str).upper()
+
+    def __repr__(self):
+        return "%s(%s)" % (self.__class__.__name__,str(self))
+
+    def __str__(self):
+        return self.strand
