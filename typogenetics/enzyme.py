@@ -3,24 +3,24 @@ from collections import deque
 
 
 ABSOLUTE_TO_BINDING = {
-    'R':'A',
-    'U':'C',
-    'D':'G',
-    'L':'T'
+    'R': 'A',
+    'U': 'C',
+    'D': 'G',
+    'L': 'T'
 }
 
 ENZYME_TO_RELATIVE = {
-               'cut':'s', 'delete':'s', 'swi':'r',
-    'mvr':'s', 'mvl':'s', 'cop':'r',    'off':'l',
-    'ina':'s', 'inc':'r', 'ing':'r',    'int':'l',
-    'rpy':'r', 'rpu':'l', 'lpy':'l',    'lpu':'l'
+    'cut': 's', 'delete': 's', 'swi': 'r',
+    'mvr': 's', 'mvl': 's', 'cop': 'r',    'off': 'l',
+    'ina': 's', 'inc': 'r', 'ing': 'r',    'int': 'l',
+    'rpy': 'r', 'rpu': 'l', 'lpy': 'l',    'lpu': 'l'
 }
 
 RELATIVE_TRANSFORMATIONS = {
-    'R':{ 's':'R', 'l':'U', 'r':'D' },
-    'U':{ 's':'U', 'l':'L', 'r':'R' },
-    'D':{ 's':'D', 'l':'R', 'r':'L' },
-    'L':{ 's':'L', 'l':'D', 'r':'U' }
+    'R': {'s': 'R', 'l': 'U', 'r': 'D'},
+    'U': {'s': 'U', 'l': 'L', 'r': 'R'},
+    'D': {'s': 'D', 'l': 'R', 'r': 'L'},
+    'L': {'s': 'L', 'l': 'D', 'r': 'U'}
 }
 
 
@@ -54,9 +54,9 @@ class Enzyme(object):
     def binding_preference(self):
         relative_directions = [ENZYME_TO_RELATIVE[amino_acid.__class__.__name__] for amino_acid in self.amino_acids]
 
-        #always start off heading to the right
+        # always start off heading to the right
         absolute_direction = 'R'
-        for relative_direction in relative_directions[1:-1]: #don't include the first and last movements
+        for relative_direction in relative_directions[1:-1]:  # don't include the first and last movements
             absolute_direction = RELATIVE_TRANSFORMATIONS[absolute_direction][relative_direction]
 
         return ABSOLUTE_TO_BINDING[absolute_direction]

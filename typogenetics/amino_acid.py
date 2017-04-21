@@ -5,7 +5,7 @@ class AminoAcid(object):
         pass
 
     def __eq__(self, other):
-        return type(self) == type(other)
+        return isinstance(self, type(other))
 
 
 class puc(AminoAcid):
