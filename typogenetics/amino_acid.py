@@ -8,6 +8,12 @@ class AminoAcid(object):
         return type(self) == type(other)
 
 
+class puc(AminoAcid):
+
+    def execute(self, strand):
+        pass
+
+
 class cut(AminoAcid):
 
     def execute(self, strand):
