@@ -1,18 +1,17 @@
-from typogenetics import Enzyme, InvalidEnzyme, AminoAcid
-from nose.tools import *
+from typogenetics.enzyme import Enzyme, InvalidEnzyme
+import typogenetics.amino_acid
+
+from nose.tools import assert_raises_regexp
 
 class TestEnzyme:
 
     def test_constructor(self):
-        aa1 = AminoAcid()
-        aa2 = AminoAcid()
-        aa_list = [aa1, aa2]
-        e = Enzyme(aa_list)
+        Enzyme([typogenetics.amino_acid.cut(), typogenetics.amino_acid.delete()])
 
     def test_input_not_a_list(self):
         with assert_raises_regexp(InvalidEnzyme, 'Input must be a list'):
-            Enzyme('int')
+            Enzyme('cut')
 
     def test_input_all_amino_acids(self):
         with assert_raises_regexp(InvalidEnzyme, 'Must all be of type AminoAcid'):
-            Enzyme([AminoAcid(), AminoAcid(), 4])
+            Enzyme([typogenetics.amino_acid.cut(), typogenetics.amino_acid.delete(), 4])

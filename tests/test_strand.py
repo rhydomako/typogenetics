@@ -1,6 +1,6 @@
 from nose.tools import *
 
-from typogenetics import Strand, InvalidStrand
+from typogenetics.strand import Strand, InvalidStrand
 
 class TestStrand:
 

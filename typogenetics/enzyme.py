@@ -22,6 +22,7 @@ class Enzyme(object):
     def __init__(self, amino_acid_list):
         _check_amino_acids(amino_acid_list)
         self.amino_acids = deque(amino_acid_list)
+        self.preferred_binding = self.preferred_binding()
 
     def preferred_binding(self):
-        pass
+        return None

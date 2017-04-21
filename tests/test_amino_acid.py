@@ -1,4 +1,4 @@
-from typogenetics import AminoAcid
+from typogenetics.amino_acid import AminoAcid
 
 class TestAminoAcid:
 
