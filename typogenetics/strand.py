@@ -21,6 +21,10 @@ class Strand(object):
 
     def __init__(self, strand_str):
         self.strand = _check_input(strand_str).upper()
+        self.current_base_ptr = 0  # left-most position in the strand
+
+    def current_base(self):
+        return self.strand[self.current_base_ptr]
 
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, str(self))
