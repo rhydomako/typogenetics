@@ -1,104 +1,68 @@
 
 class AminoAcid(object):
-
-    def __init__(self):
-        pass
-
     def __eq__(self, other):
         return isinstance(self, type(other))
 
 
 class puc(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class cut(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class delete(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class swi(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class mvr(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class mvl(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class cop(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class off(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class ina(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class inc(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class ing(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class int(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class rpy(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class rpu(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class lpy(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
 
 
 class lpu(AminoAcid):
-
-    def execute(self, strand):
-        pass
+    pass
