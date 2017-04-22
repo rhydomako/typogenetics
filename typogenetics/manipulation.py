@@ -24,18 +24,10 @@ class StrandBuffer(object):
         self.bound = None
         self.right = deque(strand)
 
-    def __str__(self):
-        _str = "Buffers dump: " + self.dump() + "\n"
-        _str += "Left buffer: " + str(self.left) + "\n"
-        _str += "Currently binding to: " + str(self.bound or '') + "\n"
-        _str += "Right buffer: " + str(self.right) + "\n"
-        return _str
-
     def dump(self):
         return ''.join([(c or '.') for c in self.left]) + \
                str(self.bound or '.') + \
                ''.join([(c or '.') for c in self.right])
-
 
 
 class StrandManipulationBuffer(object):
@@ -46,6 +38,10 @@ class StrandManipulationBuffer(object):
         self.secondary = StrandBuffer(len(strand)*[None])
         self.copy_mode = False
     
+    def cut(self):
+        self.primary.right.clear()
+        self.secondary.right.clear()
+
     def mvr(self):
         if self.copy_mode:
             self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
@@ -125,7 +121,7 @@ class StrandManipulationBuffer(object):
         return _str
 
 
-def apply_enzyme(strand, enzyme):
+def apply_enzyme(strand, enzyme, verbose=False):
     """ Apply specific enzymes on a strand """
     
     sm = StrandManipulationBuffer(strand.strand)
@@ -134,12 +130,48 @@ def apply_enzyme(strand, enzyme):
     while(sm.primary.bound != enzyme.binding_preference):
         sm.mvr()
 
+    if verbose:
+        print sm
+
+    strands = []
+    primary_strands = []
+    secondary_strands = []
+
+    # TODO::swi
     for amino_acid in enzyme.amino_acids:
-        if amino_acid.__class__.__name__ == 'delete':
+        if amino_acid.__class__.__name__ == 'cut':
+            primary_strands.append( ''.join([(c or '.') for c in sm.primary.right]) )
+            secondary_strands.append( ''.join([(c or '.') for c in sm.secondary.right]) )
+            sm.cut()
+        elif amino_acid.__class__.__name__ == 'delete':
             sm.delete()
         elif amino_acid.__class__.__name__ == 'mvr':
             sm.mvr()
+        elif amino_acid.__class__.__name__ == 'mvl':
+            sm.mvl()
+        elif amino_acid.__class__.__name__ == 'cop':
+            sm.cop()
+        elif amino_acid.__class__.__name__ == 'off':
+            sm.off()
         elif amino_acid.__class__.__name__ == 'int':
             sm.int()
+        elif amino_acid.__class__.__name__ == 'rpu':
+            sm.rpu()
+        elif amino_acid.__class__.__name__ == 'rpy':
+            sm.rpy()
 
-    return Strand(sm.primary.dump())
+        if verbose:
+            print amino_acid.__class__.__name__
+            print sm
+
+    primary_strands.append(sm.primary.dump())
+    secondary_strands.append(sm.secondary.dump())
+
+    strands.extend(primary_strands)
+    for strand in secondary_strands:
+        for sub_strand in strand.split('.'):
+            strands.append(sub_strand[::-1])
+
+    strands = filter(lambda s: len(s), strands)
+
+    return [Strand(s) for s in strands]
