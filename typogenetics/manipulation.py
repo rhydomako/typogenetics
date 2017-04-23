@@ -7,6 +7,7 @@ BASE_COMPLEMENT = {
     'A':'T', 'T':'A',
     'G':'C', 'C':'G'
 }
+PLACEHOLDER = '.'
 
 class OutOfStrandException(Exception):
     pass
@@ -33,8 +34,16 @@ class StrandManipulationBuffer(object):
         self.primary = StrandBuffer(strand)
         self.secondary = StrandBuffer(len(strand)*[None])
         self.copy_mode = False
-    
+        # lists to hold onto cut strands
+        self.primary_strands = []
+        self.secondary_strands = []
+
     def cut(self):
+        # save the cut strands
+        self.primary_strands.append( ''.join([(c or PLACEHOLDER) for c in self.primary.right]) )
+        self.secondary_strands.append( ''.join([(c or PLACEHOLDER) for c in self.secondary.right]) )
+        # clear the right buffers which executes the cut, but allows us to continue 
+        # with further manipulations
         self.primary.right.clear()
         self.secondary.right.clear()
 
@@ -165,15 +174,9 @@ def apply_enzyme(strand, enzyme, verbose=False):
     if verbose:
         print sm
 
-    strands = []
-    primary_strands = []
-    secondary_strands = []
-
     for amino_acid in enzyme.amino_acids:
         try:
             if amino_acid.__class__.__name__ == 'cut':
-                primary_strands.append( ''.join([(c or '.') for c in sm.primary.right]) )
-                secondary_strands.append( ''.join([(c or '.') for c in sm.secondary.right]) )
                 sm.cut()
             elif amino_acid.__class__.__name__ == 'swi':
                 sm.swi()
@@ -210,18 +213,21 @@ def apply_enzyme(strand, enzyme, verbose=False):
         except OutOfStrandException:
             break
 
-    primary_strands.append(sm.primary.dump())
-    secondary_strands.append(sm.secondary.dump())
+    # collect all of the strands
+    strands = []
+    sm.primary_strands.append(sm.primary.dump())
+    sm.secondary_strands.append(sm.secondary.dump())
 
-
-    for strand in primary_strands:
-        for sub_strand in strand.split('.'):
+    for strand in sm.primary_strands:
+        for sub_strand in strand.split(PLACEHOLDER): # in some cases there might be gaps, so split by the null placeholder
             strands.append(sub_strand)
 
-    for strand in secondary_strands:
-        for sub_strand in strand.split('.'):
+    # the upper strands need to be reversed
+    for strand in sm.secondary_strands:
+        for sub_strand in strand.split(PLACEHOLDER):
             strands.append(sub_strand[::-1])
 
+    # remove any empty strands/strings
     strands = filter(lambda s: len(s), strands)
 
     return [Strand(s) for s in strands]
