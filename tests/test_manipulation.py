@@ -331,3 +331,21 @@ class TestManipulation:
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
         assert(strand_strs == ['ATG', 'TAGATCCAGTCCACATCGA'])
+    
+    def test_right_outofbounds(self):
+        s = Strand('ACGT')
+        e = Enzyme([aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(),
+                    aa.inc(), aa.ing()])
+
+        final_strands = apply_enzyme(s, e)
+        strand_strs = sorted([strand.strand for strand in final_strands])
+        assert(strand_strs == ['ACGT'])
+    
+    def test_left_outofbounds(self):
+        s = Strand('ACGT')
+        e = Enzyme([aa.mvl(), aa.mvl(), aa.mvl(), aa.mvr(), aa.mvr(), aa.mvr(),
+                    aa.inc(), aa.ing()])
+
+        final_strands = apply_enzyme(s, e)
+        strand_strs = sorted([strand.strand for strand in final_strands])
+        assert(strand_strs == ['ACGT'])

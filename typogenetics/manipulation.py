@@ -73,6 +73,7 @@ class StrandManipulationBuffer(object):
             if self.copy_mode:
                 self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
         else:
+            self.primary.bound = None
             raise OutOfStrandException
 
     def mvl(self):
@@ -85,6 +86,7 @@ class StrandManipulationBuffer(object):
             if self.copy_mode:
                 self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
         else:
+            self.primary.bound = None
             raise OutOfStrandException
 
     def cop(self):
@@ -222,6 +224,7 @@ def apply_enzyme(strand, enzyme, verbose=False):
 
     primary_strands.append(sm.primary.dump())
     secondary_strands.append(sm.secondary.dump())
+
 
     for strand in primary_strands:
         for sub_strand in strand.split('.'):
