@@ -100,6 +100,7 @@ class StrandManipulationBuffer(object):
             self.secondary.right.appendleft(BASE_COMPLEMENT['A'])
         else:
             self.secondary.right.appendleft(None)
+        self.mvr()
 
     def inc(self):
         self.primary.right.appendleft('C')
@@ -107,6 +108,7 @@ class StrandManipulationBuffer(object):
             self.secondary.right.appendleft(BASE_COMPLEMENT['C'])
         else:
             self.secondary.right.appendleft(None)
+        self.mvr()
 
     def ing(self):
         self.primary.right.appendleft('G')
@@ -114,6 +116,7 @@ class StrandManipulationBuffer(object):
             self.secondary.right.appendleft(BASE_COMPLEMENT['G'])
         else:
             self.secondary.right.appendleft(None)
+        self.mvr()
 
     def int(self):
         self.primary.right.appendleft('T')
@@ -121,6 +124,7 @@ class StrandManipulationBuffer(object):
             self.secondary.right.appendleft(BASE_COMPLEMENT['T'])
         else:
             self.secondary.right.appendleft(None)
+        self.mvr()
 
     def rpy(self):
         self.mvr()
@@ -205,6 +209,10 @@ def apply_enzyme(strand, enzyme, verbose=False):
                 sm.rpu()
             elif amino_acid.__class__.__name__ == 'rpy':
                 sm.rpy()
+            elif amino_acid.__class__.__name__ == 'lpu':
+                sm.lpu()
+            elif amino_acid.__class__.__name__ == 'lpy':
+                sm.lpy()
 
             if verbose:
                 print amino_acid.__class__.__name__

@@ -322,3 +322,12 @@ class TestManipulation:
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
         assert(strand_strs == ['ACGT'])
+
+    def test_book_example(self):
+        s = Strand('TAGATCCAGTCCATCGA')
+        e = Enzyme([aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), # some extra movements to lineup with the known example
+                    aa.rpu(), aa.inc(), aa.cop(), aa.mvr(), aa.mvl(), aa.swi(), aa.lpu(), aa.int()])
+
+        final_strands = apply_enzyme(s, e)
+        strand_strs = sorted([strand.strand for strand in final_strands])
+        assert(strand_strs == ['ATG', 'TAGATCCAGTCCACATCGA'])
