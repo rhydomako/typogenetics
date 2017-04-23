@@ -90,71 +90,59 @@ class StrandManipulationBuffer(object):
             raise OutOfStrandException
 
     def cop(self):
+        # a complement base gets set on the upper strand right away
         self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
         self.copy_mode = True
 
     def off(self):
         self.copy_mode = False
 
-    def ina(self):
-        self.primary.right.appendleft('A')
+    def insert(self, base):
+        self.primary.right.appendleft(base)
         if self.copy_mode:
-            self.secondary.right.appendleft(BASE_COMPLEMENT['A'])
+            self.secondary.right.appendleft(BASE_COMPLEMENT[base])
         else:
             self.secondary.right.appendleft(None)
         self.mvr()
+
+    def ina(self):
+        self.insert('A')
 
     def inc(self):
-        self.primary.right.appendleft('C')
-        if self.copy_mode:
-            self.secondary.right.appendleft(BASE_COMPLEMENT['C'])
-        else:
-            self.secondary.right.appendleft(None)
-        self.mvr()
+        self.insert('C')
 
     def ing(self):
-        self.primary.right.appendleft('G')
-        if self.copy_mode:
-            self.secondary.right.appendleft(BASE_COMPLEMENT['G'])
-        else:
-            self.secondary.right.appendleft(None)
-        self.mvr()
+        self.insert('G')
 
     def int(self):
-        self.primary.right.appendleft('T')
+        self.insert('T')
+
+    def repeated_move(self, direction, stop_condition):
+        def move(direction):
+            if direction == 'l':
+                self.mvl()
+            elif direction == 'r':
+                self.mvr()
+            else:
+                raise ValueError()
+
+        move(direction)
+        while(self.primary.bound not in stop_condition):
+            move(direction)
         if self.copy_mode:
-            self.secondary.right.appendleft(BASE_COMPLEMENT['T'])
-        else:
-            self.secondary.right.appendleft(None)
-        self.mvr()
+            self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
 
     def rpy(self):
-        self.mvr()
-        while(self.primary.bound not in ['T','C']):
-            self.mvr()
-        if self.copy_mode:
-            self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
+        self.repeated_move('r', ['T','C'])
 
     def rpu(self):
-        self.mvr()
-        while(self.primary.bound not in ['A','G']):
-            self.mvr()
-        if self.copy_mode:
-            self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
+        self.repeated_move('r', ['A','G'])
 
     def lpy(self):
-        self.mvl()
-        while(self.primary.bound not in ['T','C']):
-            self.mvl()
-        if self.copy_mode:
-            self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
+        self.repeated_move('l', ['T','C'])
 
     def lpu(self):
-        self.mvl()
-        while(self.primary.bound not in ['A','G']):
-            self.mvl()
-        if self.copy_mode:
-            self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
+        self.repeated_move('l', ['A','G'])
 
     def __str__(self):
         _str = ' '*(11 + len(self.secondary.left)) + 'v' + "\n"
