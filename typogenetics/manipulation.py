@@ -38,6 +38,16 @@ class StrandManipulationBuffer(object):
         self.primary_strands = []
         self.secondary_strands = []
 
+    def __call__(self, operation):
+        """ Envoke the specific operator by name
+        Example:
+
+        strand = Strand('CAT')
+        sm = StrandManipulationBuffer(strand)
+        sm('cut')    
+        """
+        getattr(self, operation)()
+
     def cut(self):
         # save the cut strands
         self.primary_strands.append( ''.join([(c or PLACEHOLDER) for c in self.primary.right]) )
@@ -176,37 +186,7 @@ def apply_enzyme(strand, enzyme, verbose=False):
 
     for amino_acid in enzyme.amino_acids:
         try:
-            if amino_acid.__class__.__name__ == 'cut':
-                sm.cut()
-            elif amino_acid.__class__.__name__ == 'swi':
-                sm.swi()
-            elif amino_acid.__class__.__name__ == 'delete':
-                sm.delete()
-            elif amino_acid.__class__.__name__ == 'mvr':
-                sm.mvr()
-            elif amino_acid.__class__.__name__ == 'mvl':
-                sm.mvl()
-            elif amino_acid.__class__.__name__ == 'cop':
-                sm.cop()
-            elif amino_acid.__class__.__name__ == 'off':
-                sm.off()
-            elif amino_acid.__class__.__name__ == 'ina':
-                sm.ina()
-            elif amino_acid.__class__.__name__ == 'inc':
-                sm.inc()
-            elif amino_acid.__class__.__name__ == 'ing':
-                sm.ing()
-            elif amino_acid.__class__.__name__ == 'int':
-                sm.int()
-            elif amino_acid.__class__.__name__ == 'rpu':
-                sm.rpu()
-            elif amino_acid.__class__.__name__ == 'rpy':
-                sm.rpy()
-            elif amino_acid.__class__.__name__ == 'lpu':
-                sm.lpu()
-            elif amino_acid.__class__.__name__ == 'lpy':
-                sm.lpy()
-
+            sm(amino_acid.__class__.__name__)
             if verbose:
                 print amino_acid.__class__.__name__
                 print sm
