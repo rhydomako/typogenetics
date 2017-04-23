@@ -8,6 +8,9 @@ BASE_COMPLEMENT = {
     'G':'C', 'C':'G'
 }
 PLACEHOLDER = '.'
+PURINES = ['A', 'G']
+PYRIMIDINES = ['C', 'T']
+
 
 class OutOfStrandException(Exception):
     pass
@@ -22,17 +25,20 @@ class StrandBuffer(object):
         self.right = deque(strand)
 
     def dump(self):
-        return ''.join([(c or '.') for c in self.left]) + \
-               str(self.bound or '.') + \
-               ''.join([(c or '.') for c in self.right])
+        """ Join the left-bound-right buffers together and return as a string """
+        return ''.join([(c or PLACEHOLDER) for c in self.left]) + \
+               str(self.bound or PLACEHOLDER) + \
+               ''.join([(c or PLACEHOLDER) for c in self.right])
 
 
 class StrandManipulationBuffer(object):
     """ Operations on the StrandBuffers """
 
     def __init__(self, strand):
+        # initialize buffers
         self.primary = StrandBuffer(strand)
         self.secondary = StrandBuffer(len(strand)*[None])
+        # copy mode is initially turned off
         self.copy_mode = False
         # lists to hold onto cut strands
         self.primary_strands = []
@@ -152,16 +158,16 @@ class StrandManipulationBuffer(object):
             self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
 
     def rpy(self):
-        self.repeated_move('r', ['T','C'])
+        self.repeated_move('r', PYRIMIDINES)
 
     def rpu(self):
-        self.repeated_move('r', ['A','G'])
+        self.repeated_move('r', PURINES)
 
     def lpy(self):
-        self.repeated_move('l', ['T','C'])
+        self.repeated_move('l', PYRIMIDINES)
 
     def lpu(self):
-        self.repeated_move('l', ['A','G'])
+        self.repeated_move('l', PURINES)
 
     def __str__(self):
         _str = ' '*(11 + len(self.secondary.left)) + 'v' + "\n"
@@ -181,11 +187,14 @@ def apply_enzyme(strand, enzyme, verbose=False):
     while(sm.primary.bound != enzyme.binding_preference):
         sm.mvr()
 
+    # log initial state, if desired
     if verbose:
         print sm
 
+    # apply the amino acid operations in order, unless we hit the end of a strand
     for amino_acid in enzyme.amino_acids:
         try:
+            # call operator
             sm(amino_acid.__class__.__name__)
             if verbose:
                 print amino_acid.__class__.__name__
