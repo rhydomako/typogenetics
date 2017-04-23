@@ -349,3 +349,19 @@ class TestManipulation:
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
         assert(strand_strs == ['ACGT'])
+    
+    def test_delete(self):
+        s = Strand('ACGT')
+        e = Enzyme([aa.delete()])
+
+        final_strands = apply_enzyme(s, e)
+        strand_strs = sorted([strand.strand for strand in final_strands])
+        assert(strand_strs == ['CGT'])
+
+    def test_delete_outofbounds(self):
+        s = Strand('ACGT')
+        e = Enzyme([aa.mvr(), aa.delete(), aa.delete(), aa.delete(), aa.inc()])
+
+        final_strands = apply_enzyme(s, e)
+        strand_strs = sorted([strand.strand for strand in final_strands])
+        assert(strand_strs == ['A'])
