@@ -2,7 +2,7 @@ from typogenetics.enzyme import Enzyme, InvalidEnzyme
 from typogenetics.strand import Strand
 from typogenetics.ribosomes import strand_to_enzymes
 from typogenetics.manipulation import apply_enzyme, StrandManipulationBuffer
-import typogenetics.amino_acid as aa
+from typogenetics.amino_acid import AminoAcid
 
 from nose.tools import assert_raises_regexp
 
@@ -16,7 +16,7 @@ class TestManipulation:
 
     def test_apply_enzyme_ACA(self):
         s = Strand('ACA')
-        e = Enzyme([aa.delete(), aa.mvr(), aa.int()])
+        e = Enzyme([AminoAcid('delete'), AminoAcid('mvr'), AminoAcid('int')])
         final_strands = apply_enzyme(s,e)
 
         assert(isinstance(final_strands[0], Strand) == True)
@@ -24,7 +24,7 @@ class TestManipulation:
 
     def test_apply_longer_enzyme(self):
         s = Strand('CAAAGAGAATCCTCTTTGAT')
-        e = Enzyme([aa.rpy(), aa.cop(), aa.rpu()])
+        e = Enzyme([AminoAcid('rpy'), AminoAcid('cop'), AminoAcid('rpu')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -33,7 +33,7 @@ class TestManipulation:
     
     def test_apply_longer_enzyme_cut(self):
         s = Strand('CAAAGAGAATCCTCTTTGAT')
-        e = Enzyme([aa.rpy(), aa.cop(), aa.rpu(), aa.cut()])
+        e = Enzyme([AminoAcid('rpy'), AminoAcid('cop'), AminoAcid('rpu'), AminoAcid('cut')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -57,7 +57,7 @@ class TestManipulation:
         ['ACGT', 'T']
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.cop()])
+        e = Enzyme([AminoAcid('cop')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -79,7 +79,7 @@ class TestManipulation:
         ['A', 'CGT']
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.cut()])
+        e = Enzyme([AminoAcid('cut')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -107,7 +107,7 @@ class TestManipulation:
         ['ACGT', 'GT']
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.cop(), aa.mvr()])
+        e = Enzyme([AminoAcid('cop'), AminoAcid('mvr')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -141,7 +141,7 @@ class TestManipulation:
         ['AC', 'ACGT']
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.mvr(), aa.cop(), aa.mvl()])
+        e = Enzyme([AminoAcid('mvr'), AminoAcid('cop'), AminoAcid('mvl')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -163,7 +163,7 @@ class TestManipulation:
         ['ACCGT']
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.ina()])
+        e = Enzyme([AminoAcid('ina')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -191,7 +191,7 @@ class TestManipulation:
         ['ACCGT', 'GT']
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.cop(), aa.inc()])
+        e = Enzyme([AminoAcid('cop'), AminoAcid('inc')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -243,7 +243,8 @@ class TestManipulation:
         ['ACGGT', 'CC', 'T']
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.cop(), aa.off(), aa.mvr(), aa.mvr(), aa.cop(), aa.ing()])
+        e = Enzyme([AminoAcid('cop'), AminoAcid('off'), AminoAcid('mvr'), 
+                    AminoAcid('mvr'), AminoAcid('cop'), AminoAcid('ing')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -271,7 +272,7 @@ class TestManipulation:
         ['ACGT', 'T']
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.cop(), aa.swi()])
+        e = Enzyme([AminoAcid('cop'), AminoAcid('swi')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -303,7 +304,7 @@ class TestManipulation:
                      ^
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.cop(), aa.swi(), aa.swi()])
+        e = Enzyme([AminoAcid('cop'), AminoAcid('swi'), AminoAcid('swi')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -317,7 +318,7 @@ class TestManipulation:
                    ^
         """
         s = Strand('ACGT')
-        e = Enzyme([aa.swi()])
+        e = Enzyme([AminoAcid('swi')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -325,8 +326,10 @@ class TestManipulation:
 
     def test_book_example(self):
         s = Strand('TAGATCCAGTCCATCGA')
-        e = Enzyme([aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), # some extra movements to lineup with the known example
-                    aa.rpu(), aa.inc(), aa.cop(), aa.mvr(), aa.mvl(), aa.swi(), aa.lpu(), aa.int()])
+        e = Enzyme([AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvr'), 
+                    AminoAcid('mvr'), AminoAcid('mvr'), # some extra movements to lineup with the known example
+                    AminoAcid('rpu'), AminoAcid('inc'), AminoAcid('cop'), AminoAcid('mvr'),
+                    AminoAcid('mvl'), AminoAcid('swi'), AminoAcid('lpu'), AminoAcid('int')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -334,8 +337,8 @@ class TestManipulation:
     
     def test_right_outofbounds(self):
         s = Strand('ACGT')
-        e = Enzyme([aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(), aa.mvr(),
-                    aa.inc(), aa.ing()])
+        e = Enzyme([AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvr'),
+                    AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('inc'), AminoAcid('ing')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -343,8 +346,8 @@ class TestManipulation:
     
     def test_left_outofbounds(self):
         s = Strand('ACGT')
-        e = Enzyme([aa.mvl(), aa.mvl(), aa.mvl(), aa.mvr(), aa.mvr(), aa.mvr(),
-                    aa.inc(), aa.ing()])
+        e = Enzyme([AminoAcid('mvl'), AminoAcid('mvl'), AminoAcid('mvl'), AminoAcid('mvr'),
+                    AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('inc'), AminoAcid('ing')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -352,7 +355,7 @@ class TestManipulation:
     
     def test_delete(self):
         s = Strand('ACGT')
-        e = Enzyme([aa.delete()])
+        e = Enzyme([AminoAcid('delete')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
@@ -360,7 +363,7 @@ class TestManipulation:
 
     def test_delete_outofbounds(self):
         s = Strand('ACGT')
-        e = Enzyme([aa.mvr(), aa.delete(), aa.delete(), aa.delete(), aa.inc()])
+        e = Enzyme([AminoAcid('mvr'), AminoAcid('delete'), AminoAcid('delete'), AminoAcid('delete'), AminoAcid('inc')])
 
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])

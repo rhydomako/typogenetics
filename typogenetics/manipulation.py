@@ -199,7 +199,7 @@ def apply_enzyme(strand, enzyme, verbose=False):
     for amino_acid in enzyme.amino_acids:
         try:
             # call operator
-            sm(amino_acid.__class__.__name__)
+            sm(amino_acid.op)
             if verbose:
                 print amino_acid.__class__.__name__
                 print sm

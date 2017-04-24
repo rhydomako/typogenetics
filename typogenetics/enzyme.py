@@ -11,9 +11,9 @@ ABSOLUTE_TO_BINDING = {
 
 ENZYME_TO_RELATIVE = {
     'cut': 's', 'delete': 's', 'swi': 'r',
-    'mvr': 's', 'mvl': 's', 'cop': 'r',    'off': 'l',
-    'ina': 's', 'inc': 'r', 'ing': 'r',    'int': 'l',
-    'rpy': 'r', 'rpu': 'l', 'lpy': 'l',    'lpu': 'l'
+    'mvr': 's', 'mvl': 's', 'cop': 'r', 'off': 'l',
+    'ina': 's', 'inc': 'r', 'ing': 'r', 'int': 'l',
+    'rpy': 'r', 'rpu': 'l', 'lpy': 'l', 'lpu': 'l'
 }
 
 RELATIVE_TRANSFORMATIONS = {
@@ -56,7 +56,7 @@ class Enzyme(object):
     def binding_preference(self):
         """ Determine the enzyme's binding preference from the folding directions """
         # apply the mapping from amino acid to relative path directions 
-        relative_directions = [ENZYME_TO_RELATIVE[amino_acid.__class__.__name__] for amino_acid in self.amino_acids]
+        relative_directions = [ENZYME_TO_RELATIVE[amino_acid.op] for amino_acid in self.amino_acids]
 
         # always start off heading to the right
         absolute_direction = 'R'

@@ -1,7 +1,7 @@
 from typogenetics.ribosomes import strand_to_enzymes
 from typogenetics.strand import Strand
 from typogenetics.enzyme import Enzyme
-import typogenetics.amino_acid as aa
+from typogenetics.amino_acid import AminoAcid
 
 from nose.tools import assert_raises_regexp
 
@@ -22,15 +22,17 @@ class TestRibosomes:
         s = Strand('TAGATCCAGTCCACATCGA')
         e = strand_to_enzymes(s)
 
-        e_known = [Enzyme([aa.rpy(), aa.ina(), aa.rpu(), aa.mvr(), aa.int(), aa.mvl(), aa.cut(), aa.swi(), aa.cop()])]
+        e_known = [Enzyme([AminoAcid('rpy'), AminoAcid('ina'), AminoAcid('rpu'), AminoAcid('mvr'),
+                           AminoAcid('int'), AminoAcid('mvl'), AminoAcid('cut'), AminoAcid('swi'),
+                           AminoAcid('cop')])]
         self.assert_enzymes_eq(e, e_known)
 
     def test_punctuation(self):
         s = Strand('CGGATACTAAACCGA')
         e = strand_to_enzymes(s)
 
-        e_known = [Enzyme([aa.cop(), aa.ina(), aa.rpy(), aa.off()]),
-                   Enzyme([aa.cut(), aa.cop()])]
+        e_known = [Enzyme([AminoAcid('cop'), AminoAcid('ina'), AminoAcid('rpy'), AminoAcid('off')]),
+                   Enzyme([AminoAcid('cut'), AminoAcid('cop')])]
         self.assert_enzymes_eq(e, e_known)
 
     def test_null(self):

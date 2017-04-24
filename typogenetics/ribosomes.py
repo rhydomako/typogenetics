@@ -3,10 +3,10 @@ from typogenetics.enzyme import Enzyme
 import typogenetics.amino_acid as aa
 
 TYPOGENETIC_CODE = {
-    'AA': aa.puc(), 'AC': aa.cut(), 'AG': aa.delete(), 'AT': aa.swi(),
-    'CA': aa.mvr(), 'CC': aa.mvl(), 'CG': aa.cop(),    'CT': aa.off(),
-    'GA': aa.ina(), 'GC': aa.inc(), 'GG': aa.ing(),    'GT': aa.int(),
-    'TA': aa.rpy(), 'TC': aa.rpu(), 'TG': aa.lpy(),    'TT': aa.lpu()
+    'AA': 'pun', 'AC': 'cut', 'AG': 'delete', 'AT': 'swi',
+    'CA': 'mvr', 'CC': 'mvl', 'CG': 'cop',    'CT': 'off',
+    'GA': 'ina', 'GC': 'inc', 'GG': 'ing',    'GT': 'int',
+    'TA': 'rpy', 'TC': 'rpu', 'TG': 'lpy',    'TT': 'lpu'
 }
 
 
@@ -18,13 +18,13 @@ def strand_to_enzymes(strand):
             yield strand[idx * 2:idx * 2 + 2]
 
     # translate the chunks to amino acids or punctuation
-    amino_acids = [TYPOGENETIC_CODE[chunk] for chunk in chunk_strand(strand.strand)]
+    amino_acids = [aa.AminoAcid(TYPOGENETIC_CODE[chunk]) for chunk in chunk_strand(strand.strand)]
 
     enzymes = []
     current_enzyme = []
     for amino_acid in amino_acids:
         # if there is an AA chunk present, we finish off the current enzyme and start a new one
-        if isinstance(amino_acid, aa.puc):
+        if amino_acid.op == 'pun':
             enzymes.append(Enzyme(current_enzyme))
             current_enzyme = []
         else:
