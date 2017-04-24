@@ -1,7 +1,12 @@
-from typogenetics.amino_acid import AminoAcid
+from typogenetics.amino_acid import AminoAcid, InvalidAminoAcid
+
+from nose.tools import assert_raises_regexp
 
 class TestAminoAcid:
 
-    def test_type(self):
-        aa = AminoAcid('pun')
-        assert(isinstance(aa, AminoAcid) == True)
+    def test_constructor(self):
+        AminoAcid('pun')
+
+    def test_invalid_op(self):
+        with assert_raises_regexp(InvalidAminoAcid, 'Not a valid amino acid'):
+            AminoAcid('cat')
