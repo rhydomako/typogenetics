@@ -23,11 +23,5 @@ class Strand(object):
     def __init__(self, strand_str):
         self.strand = _check_input(strand_str).upper()
 
-    def current_base(self):
-        return self.strand[self.current_base_ptr]
-
-    def __repr__(self):
-        return "%s(%s)" % (self.__class__.__name__, str(self))
-
     def __str__(self):
-        return self.strand
+        return "%s(%s)" % (self.__class__.__name__, str(self))
