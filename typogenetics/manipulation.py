@@ -4,8 +4,8 @@ from typogenetics.enzyme import Enzyme
 from collections import deque
 
 BASE_COMPLEMENT = {
-    'A':'T', 'T':'A',
-    'G':'C', 'C':'G'
+    'A': 'T', 'T': 'A',
+    'G': 'C', 'C': 'G'
 }
 PLACEHOLDER = '.'
 PURINES = ['A', 'G']
@@ -41,7 +41,7 @@ class StrandManipulationBuffer(object):
     def __init__(self, strand):
         # initialize buffers
         self.primary = StrandBuffer(strand)
-        self.secondary = StrandBuffer(len(strand)*[None])
+        self.secondary = StrandBuffer(len(strand) * [None])
         # copy mode is initially turned off
         self.copy_mode = False
         # lists to hold onto cut strands
@@ -54,15 +54,15 @@ class StrandManipulationBuffer(object):
 
         strand = Strand('CAT')
         sm = StrandManipulationBuffer(strand)
-        sm('cut')    
+        sm('cut')
         """
         getattr(self, operation)()
 
     def cut(self):
         # save the cut strands
-        self.primary_strands.append( ''.join([(c or PLACEHOLDER) for c in self.primary.right]) )
-        self.secondary_strands.append( ''.join([(c or PLACEHOLDER) for c in self.secondary.right]) )
-        # clear the right buffers which executes the cut, but allows us to continue 
+        self.primary_strands.append(''.join([(c or PLACEHOLDER) for c in self.primary.right]))
+        self.secondary_strands.append(''.join([(c or PLACEHOLDER) for c in self.secondary.right]))
+        # clear the right buffers which executes the cut, but allows us to continue
         # with further manipulations
         self.primary.right.clear()
         self.secondary.right.clear()
@@ -70,17 +70,17 @@ class StrandManipulationBuffer(object):
     def swi(self):
         if not self.secondary.bound:
             raise OutOfStrandException
-        #swap bound
+        # swap bound
         tmp = self.primary.bound
         self.primary.bound = self.secondary.bound
         self.secondary.bound = tmp
-        #swap right-left
+        # swap right-left
         self.primary.right.reverse()
         self.secondary.left.reverse()
         tmp = self.primary.right
         self.primary.right = self.secondary.left
         self.secondary.left = tmp
-        #swap left-right
+        # swap left-right
         self.primary.left.reverse()
         self.secondary.right.reverse()
         tmp = self.primary.left
@@ -174,20 +174,20 @@ class StrandManipulationBuffer(object):
         self.repeated_move('l', PURINES)
 
     def __str__(self):
-        _str = ' '*(11 + len(self.secondary.left)) + 'v' + "\n"
+        _str = ' ' * (11 + len(self.secondary.left)) + 'v' + "\n"
         _str += "Secondary: " + self.secondary.dump() + "\n"
         _str += "Primary:   " + self.primary.dump() + "\n"
-        _str += ' '*(11 + len(self.primary.left)) + '^' + "\n"
+        _str += ' ' * (11 + len(self.primary.left)) + '^' + "\n"
         _str += "Copy mode: " + str(self.copy_mode)
         return _str
 
 
 def apply_enzyme(strand, enzyme, verbose=False):
     """ Apply specific enzymes on a strand """
-    
+
     sm = StrandManipulationBuffer(strand.strand)
 
-    #find an initial binding pair
+    # find an initial binding pair
     while(sm.primary.bound != enzyme.binding_preference):
         sm.mvr()
 
@@ -212,7 +212,7 @@ def apply_enzyme(strand, enzyme, verbose=False):
     sm.secondary_strands.append(sm.secondary.dump())
 
     for strand in sm.primary_strands:
-        for sub_strand in strand.split(PLACEHOLDER): # in some cases there might be gaps, so split by the null placeholder
+        for sub_strand in strand.split(PLACEHOLDER):  # in some cases there might be gaps, so split by the null placeholder
             strands.append(sub_strand)
 
     # the upper strands need to be reversed

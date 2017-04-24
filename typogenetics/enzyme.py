@@ -55,7 +55,7 @@ class Enzyme(object):
 
     def binding_preference(self):
         """ Determine the enzyme's binding preference from the folding directions """
-        # apply the mapping from amino acid to relative path directions 
+        # apply the mapping from amino acid to relative path directions
         relative_directions = [ENZYME_TO_RELATIVE[amino_acid.op] for amino_acid in self.amino_acids]
 
         # always start off heading to the right
