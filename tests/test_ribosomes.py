@@ -3,8 +3,6 @@ from typogenetics.strand import Strand
 from typogenetics.enzyme import Enzyme
 from typogenetics.amino_acid import AminoAcid
 
-from nose.tools import assert_raises_regexp
-
 class TestRibosomes:
 
     def assert_enzymes_eq(self, e1, e2):

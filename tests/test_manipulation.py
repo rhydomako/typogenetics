@@ -1,10 +1,8 @@
 from typogenetics.enzyme import Enzyme, InvalidEnzyme
 from typogenetics.strand import Strand
 from typogenetics.ribosomes import strand_to_enzymes
-from typogenetics.manipulation import apply_enzyme, StrandManipulationBuffer
+from typogenetics.manipulation import apply_enzyme
 from typogenetics.amino_acid import AminoAcid
-
-from nose.tools import assert_raises_regexp
 
 class TestManipulation:
 
