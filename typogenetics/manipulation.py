@@ -201,7 +201,7 @@ def apply_enzyme(strand, enzyme, verbose=False):
             # call operator
             sm(amino_acid.op)
             if verbose:
-                print amino_acid.__class__.__name__
+                print amino_acid.op
                 print sm
         except OutOfStrandException:
             break

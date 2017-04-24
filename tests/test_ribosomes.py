@@ -15,7 +15,7 @@ class TestRibosomes:
 
         for j in range(len(e1)):
             for i in range(len(e1[j].amino_acids)):
-                assert( e1[j].amino_acids[i] == e2[j].amino_acids[i]) #amino acids are the same in the enzyme
+                assert( e1[j].amino_acids[i].op == e2[j].amino_acids[i].op) #amino acids are the same in the enzyme
 
 
     def test_strand_to_enzymes(self):
