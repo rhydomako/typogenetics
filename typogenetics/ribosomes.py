@@ -1,6 +1,5 @@
-from typogenetics.strand import Strand
 from typogenetics.enzyme import Enzyme
-import typogenetics.amino_acid as aa
+from typogenetics.amino_acid import AminoAcid
 
 TYPOGENETIC_CODE = {
     'AA': 'pun', 'AC': 'cut', 'AG': 'delete', 'AT': 'swi',
@@ -18,7 +17,7 @@ def strand_to_enzymes(strand):
             yield strand[idx * 2:idx * 2 + 2]
 
     # translate the chunks to amino acids or punctuation
-    amino_acids = [aa.AminoAcid(TYPOGENETIC_CODE[chunk]) for chunk in chunk_strand(strand.strand)]
+    amino_acids = [AminoAcid(TYPOGENETIC_CODE[chunk]) for chunk in chunk_strand(strand.strand)]
 
     enzymes = []
     current_enzyme = []
