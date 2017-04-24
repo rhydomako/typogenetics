@@ -49,7 +49,7 @@ class Enzyme(object):
         self.binding_preference = self.binding_preference()
 
     def __str__(self):
-        _str = "Amino acids: " + "-".join([amino_acid.__class__.__name__ for amino_acid in self.amino_acids]) + "\n"
+        _str = "Amino acids: " + "-".join([amino_acid.op for amino_acid in self.amino_acids]) + "\n"
         _str += "Binding preference: " + self.binding_preference
         return _str
 
