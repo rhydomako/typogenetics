@@ -1,6 +1,8 @@
 
 class AminoAcid(object):
+    """ Base class for amino acid objects """
     def __eq__(self, other):
+        # type equalitiy instead of strict object equality
         return isinstance(self, type(other))
 
 

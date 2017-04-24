@@ -18,6 +18,7 @@ def _check_input(strand_str):
 
 
 class Strand(object):
+    """ Strand object is a container for the strand string. """
 
     def __init__(self, strand_str):
         self.strand = _check_input(strand_str).upper()

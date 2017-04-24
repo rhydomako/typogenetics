@@ -32,7 +32,11 @@ class StrandBuffer(object):
 
 
 class StrandManipulationBuffer(object):
-    """ Operations on the StrandBuffers """
+    """ Operations on the StrandBuffers that follow the typogenetic rules.
+        As such there are two StrandBufferes (primary and secondary), where
+        the primary buffer is initialized with the given strand, and the
+        secondary buffer is initialized to Nones.
+     """
 
     def __init__(self, strand):
         # initialize buffers
