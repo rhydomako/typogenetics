@@ -24,4 +24,4 @@ class Strand(object):
         self.strand = _check_input(strand_str).upper()
 
     def __str__(self):
-        return "%s(%s)" % (self.__class__.__name__, str(self))
+        return "%s(%s)" % (self.__class__.__name__, self.strand)
