@@ -12,6 +12,18 @@ class TestManipulation:
         final_strands = apply_enzyme(s,e)
         assert(final_strands[0].strand == 'ACGT')
 
+    def test_empty_strand(self):
+        s = Strand('')
+        e = Enzyme([AminoAcid('delete')])
+        final_strands = apply_enzyme(s,e)
+        assert(final_strands[0] == s )
+
+    def test_no_binding(self):
+        s = Strand('GGG')
+        e = strand_to_enzymes(s)[0]
+        final_strands = apply_enzyme(s,e)
+        assert(final_strands[0] == s )
+
     def test_apply_enzyme_ACA(self):
         s = Strand('ACA')
         e = Enzyme([AminoAcid('delete'), AminoAcid('mvr'), AminoAcid('int')])

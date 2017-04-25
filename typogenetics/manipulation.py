@@ -193,7 +193,12 @@ def apply_enzyme(strand, enzyme, verbose=False):
 
     # find an initial binding pair
     while(sm.primary.bound != enzyme.binding_preference):
-        sm.mvr()
+        try:
+            sm.mvr()
+        except OutOfStrandException:
+            # either couldn't find a binding partner or empty strand
+            # in both cases, just return the original strand
+            return [strand]
 
     # log initial state, if desired
     if verbose:
