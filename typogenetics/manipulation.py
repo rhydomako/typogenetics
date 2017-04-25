@@ -99,6 +99,8 @@ class StrandManipulationBuffer(object):
         if len(self.primary.right):
             self.primary.bound = self.primary.right.popleft()
             self.secondary.bound = self.secondary.right.popleft()
+            if not self.primary.bound:
+                raise OutOfStrandException
             if self.copy_mode:
                 self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
         else:
@@ -112,6 +114,8 @@ class StrandManipulationBuffer(object):
         if len(self.primary.left):
             self.primary.bound = self.primary.left.pop()
             self.secondary.bound = self.secondary.left.pop()
+            if not self.primary.bound: # after a swi, we can have a non-empty buffer of Nones
+                raise OutOfStrandException
             if self.copy_mode:
                 self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
         else:

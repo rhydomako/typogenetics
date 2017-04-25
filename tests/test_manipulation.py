@@ -366,3 +366,11 @@ class TestManipulation:
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
         assert(strand_strs == ['A'])
+
+    def test_mvl_complement_none(self):
+        s = Strand('TCCGCAATTT')
+
+        e = strand_to_enzymes(s)[0]
+        final_strands = apply_enzyme(s, e)
+        strand_strs = sorted([strand.strand for strand in final_strands])
+        assert(strand_strs == ['GC', 'TCCGCAATTT'])
