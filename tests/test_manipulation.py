@@ -386,3 +386,19 @@ class TestManipulation:
         final_strands = apply_enzyme(s, e)
         strand_strs = sorted([strand.strand for strand in final_strands])
         assert(strand_strs == ['GC', 'TCCGCAATTT'])
+
+    def test_del_gap(self):
+        """
+        delete
+                              v
+        Secondary: ........CCCC.
+        Primary:   ACGTGGGGGG.GG
+                              ^
+        """
+        s = Strand('ACGTGGGGGGGGG')
+
+        e = Enzyme([AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvr'),
+                    AminoAcid('cop'), AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvr'), AminoAcid('mvl'), AminoAcid('delete') ])
+        final_strands = apply_enzyme(s, e)
+        strand_strs = sorted([strand.strand for strand in final_strands])
+        assert(strand_strs == ['ACGTGGGGGG', 'CCCC', 'GG'])

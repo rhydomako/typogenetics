@@ -93,7 +93,6 @@ class StrandManipulationBuffer(object):
 
     def delete(self):
         self.primary.bound = None
-        self.secondary.bound = None
         self.mvr()
 
     def mvr(self):
