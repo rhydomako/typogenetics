@@ -42,6 +42,10 @@ class StrandManipulationBuffer(object):
         # initialize buffers
         self.primary = StrandBuffer(strand)
         self.secondary = StrandBuffer(len(strand) * [None])
+        # load first base into the read slot
+        if len(strand):
+            self.primary.bound = self.primary.right.popleft()
+            self.secondary.bound = self.secondary.right.popleft()
         # copy mode is initially turned off
         self.copy_mode = False
         # lists to hold onto cut strands
@@ -93,34 +97,41 @@ class StrandManipulationBuffer(object):
         self.mvr()
 
     def mvr(self):
-        if (self.primary.bound):
+        if len(self.primary.right):
+            # move whatever is in the read slots to the left buffers
             self.primary.left.append(self.primary.bound)
             self.secondary.left.append(self.secondary.bound)
-        if len(self.primary.right):
+            # move whatever is next in the right buffers to the read slots
             self.primary.bound = self.primary.right.popleft()
             self.secondary.bound = self.secondary.right.popleft()
-            if not self.primary.bound:
-                raise OutOfStrandException
-            if self.copy_mode:
-                self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
         else:
-            self.primary.bound = None
+            # if there is nothing in the right buffer then we've run out of strand
             raise OutOfStrandException
+        if self.primary.bound == None:
+            # in this case, we've steped into a region of Nones, so out of strand
+            raise OutOfStrandException
+        if self.copy_mode:
+            # if we've in copy mode, add the compliment to the upper strand
+            self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
 
     def mvl(self):
-        if self.primary.bound:
+        if len(self.primary.left):
+            # move whatever is the read slots to the right buffers
             self.primary.right.appendleft(self.primary.bound)
             self.secondary.right.appendleft(self.secondary.bound)
-        if len(self.primary.left):
+            # move whatever is next in the left buffer to the read slots
             self.primary.bound = self.primary.left.pop()
             self.secondary.bound = self.secondary.left.pop()
-            if not self.primary.bound: # after a swi, we can have a non-empty buffer of Nones
-                raise OutOfStrandException
-            if self.copy_mode:
-                self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
         else:
-            self.primary.bound = None
+            # here, we've run out of buffer, and therefore out of strand
             raise OutOfStrandException
+        if self.primary.bound == None:
+            # in this case, we've steped into a region of Nones, so out of strand
+            raise OutOfStrandException
+        if self.copy_mode:
+            # if we've in copy mode, add the compliment to the upper strand
+            self.secondary.bound = BASE_COMPLEMENT[self.primary.bound]
+
 
     def cop(self):
         # a complement base gets set on the upper strand right away
